@@ -18,11 +18,20 @@ class PrintLines(LineReader):
         self.send_cmd('radio set pwr 10')
         time.sleep(.5)
         self.send_cmd('radio rx 0')
+        time.sleep(.5)
+        self.send_cmd("sys set pindig GPIO10 0")
 
     def handle_line(self, data):
-        if data.encode('UTF-8').startswith(b'radio_err') or data.encode('UTF-8').startswith(b'radio_rx'):
+        if data == "ok":
+            return
+        if data == "radio_err":
             self.send_cmd('radio rx 0')
+            return
+        
+        self.send_cmd("sys set pindig GPIO10 1")
         print(data)
+        time.sleep(.1)
+        self.send_cmd("sys set pindig GPIO10 0")
 
     def connection_lost(self, exc):
         if exc:
@@ -30,9 +39,6 @@ class PrintLines(LineReader):
         print("port closed")
 
     def send_cmd(self, cmd):
-        """
-        Send a command to LoRa Radio
-        """
         self.transport.write(('%s\r\n' % cmd).encode('UTF-8'))
 
 def listen():

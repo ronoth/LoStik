@@ -2,12 +2,17 @@
 import time
 import serial
 import sys
+import argparse
+
+parser = argparse.ArgumentParser(description='LoRa Radio mode sender.')
+parser.add_argument('port', help="Serial port descriptor")
+args = parser.parse_args()
 
 def send_cmd(cmd):
     ser.write(('%s\r\n' % cmd).encode('UTF-8'))
     print(ser.readline().decode("UTF-8").strip())
 
-with serial.Serial(sys.argv[1], 57600, timeout=1) as ser:
+with serial.Serial(args['port'], 57600, timeout=1) as ser:
     send_cmd("sys set pindig GPIO11 0")
     send_cmd('sys get ver')
     send_cmd('radio get mod')

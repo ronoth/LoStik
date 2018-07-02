@@ -24,9 +24,9 @@ class PrintLines(LineReader):
     def connection_lost(self, exc):
         print("port closed")
 
-ser = serial.Serial(args['port'], baudrate=57600)
-delay = args['delay']
-mode = args['mode']
+ser = serial.Serial(args.port, baudrate=57600)
+delay = args.delay
+mode = args.mode
 with ReaderThread(ser, PrintLines) as protocol:
     protocol.write_line("sys get ver")
     time.sleep(.5)

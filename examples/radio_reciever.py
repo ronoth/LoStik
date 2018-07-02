@@ -43,7 +43,7 @@ class PrintLines(LineReader):
         self.transport.write(('%s\r\n' % cmd).encode('UTF-8'))
         time.sleep(delay)
 
-ser = serial.Serial(args['port'], baudrate=57600)
+ser = serial.Serial(args.port, baudrate=57600)
 with ReaderThread(ser, PrintLines) as protocol:
     while(1):
         pass

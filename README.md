@@ -1,2 +1,2 @@
-# lora-stik
+# LoStik
 LoRaWAN compatible USB test device

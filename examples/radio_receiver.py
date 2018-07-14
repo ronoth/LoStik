@@ -6,7 +6,7 @@ import argparse
 
 from serial.threaded import LineReader, ReaderThread
 
-parser = argparse.ArgumentParser(description='LoRa Radio mode reciever.')
+parser = argparse.ArgumentParser(description='LoRa Radio mode receiver.')
 parser.add_argument('port', help="Serial port descriptor")
 args = parser.parse_args()
 

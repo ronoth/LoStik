@@ -32,6 +32,10 @@ will alternate the blue and red leds every .5 seconds.
 
 radio_receiver.py and radio_sender.py are used for sending LoRa packets between two LoRa Stiks without the need for a LoRaWAN gateway.  The included example sends a unix timestamp packet every 2 seconds and the receiver prints the incoming packets to stdout.
 
+### The Things Network
+
+lorawan_sender.py is used for sending LoRaWAN packets to a LoRaWAN gatewaywhich is connected to The Things Network backend. You need to create an application and pass the Application Key and the Application EUI as well as a Device EUI to the program.
+
 ## Resources
 
 For detailed infomation about available commands checkout one of the following docs:

@@ -47,5 +47,17 @@ All software and example scripts are MIT licensed.  For details see [LICENSE](bl
 ### Hardware
 Hardware design and schematics are licenede under Creative Commons CC-BY-SA-NC  For details see [hardware/LICENSE.md](blob/master/hardware/LICENSE.md)
 
+### User LEDS
+
+LoStik has two user LEDs that you can control via the UART interface on GPIO10 and GPIO11 and can be accessed using the following commands:
+
+```sys set pindig GPIO10 1``` (turns on blue LED)
+
+```sys set pindig GPIO10 0``` (turns off blue LED)
+
+```sys set pindig GPIO11 1``` (turns on red LED)
+
+```sys set pindig GPIO11 0``` (turns off red LED)
+
 
 <sup>LoRa® and LoRaWAN™ are trademarks of Semtech Corporation or its subsidiaries.</sup>

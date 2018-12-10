@@ -10,7 +10,7 @@ args = parser.parse_args()
 
 def send_cmd(cmd):
     ser.write(('%s\r\n' % cmd).encode('UTF-8'))
-    print(ser.readline().decode("UTF-8").strip())
+    # print("device: %s" % ser.readline().decode("UTF-8").strip())
 
 with serial.Serial(args.port, 57600, timeout=1) as ser:
     send_cmd("sys set pindig GPIO11 0")
@@ -22,9 +22,13 @@ with serial.Serial(args.port, 57600, timeout=1) as ser:
     send_cmd('radio set pwr 10')
     send_cmd("sys set pindig GPIO11 0")
 
+    frame_count = 0
     while True:
-        time.sleep(2)
         send_cmd("sys set pindig GPIO11 1")
-        send_cmd('radio tx %d' % int(time.time()))
-        time.sleep(.1)
+        txmsg = 'radio tx %x%x' % (int(time.time()), frame_count)
+        print(txmsg)
+        send_cmd(txmsg)
+        time.sleep(.3)
         send_cmd("sys set pindig GPIO11 0")
+        frame_count = frame_count + 1
+        time.sleep(10)

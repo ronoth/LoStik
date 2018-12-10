@@ -4,3 +4,4 @@ pip-selfcheck.json
 examples/bin
 examples/lib
 examples/include
+.vscode/

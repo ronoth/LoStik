@@ -14,3 +14,9 @@ Once installed you should should see a new COM port in device manager that appea
 
 * **miniterm.py** - [examples/miniterm.py](../examples/miniterm.py) is a python terminal emulator that is recommended for use along with the python examples provided in this repository.
 * **Putty** - Although Putty is very popular, the RN2903/RN2483 require \r\n endings which is not a configuration option in vanilla putty.
+
+# GUI
+Microchip offers a programm called "Lora Dev Utility" that is part of the [LoRa Development Suite](https://www.microchip.com/developmenttools/ProductDetails/dv164140-1)
+
+![](images/lora-dev-utility.png)
+

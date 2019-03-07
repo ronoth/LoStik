@@ -38,6 +38,19 @@ For detailed infomation about available commands checkout one of the following d
 * [RN2903 Command Reference](http://ww1.microchip.com/downloads/en/DeviceDoc/40001811A.pdf)
 * [RN2843 Command Reference](http://ww1.microchip.com/downloads/en/DeviceDoc/40001784B.pdf)
 
+### GUI
+Microchip offers a programm called "Lora Dev Utility" that is part of the [LoRa Development Suite](https://www.microchip.com/developmenttools/ProductDetails/dv164140-1)
+
+![](docs/images/lora-dev-utility.png)
+
+## Platform Notes
+
+For platform specific notes see:
+
+* [Windows](docs/windows.md)
+* [Mac](docs/mac.md)
+
+
 ## License
 
 ### Software

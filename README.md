@@ -49,6 +49,7 @@ For platform specific notes see:
 
 * [Windows](docs/windows.md)
 * [Mac](docs/mac.md)
+* [Linux](docs/linux.md)
 
 
 ## License

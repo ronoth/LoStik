@@ -135,6 +135,11 @@ public enum SystemGetCommand: Equatable, Hashable {
     
     /// Returns the state of the pin, either low (‘0’) or high (‘1’).
     case digitalPin(Pin)
+    
+    /// This command returns a 10-bit analog value for the queried pin,
+    /// where 0 represents 0V and 1023 represents VDD.
+    /// An ADC conversion on the VDD pin can be performed by using the command `sys get vdd`.
+    case analogPin(Pin)
 }
 
 public extension SystemGetCommand {
@@ -147,6 +152,7 @@ public extension SystemGetCommand {
         case .voltage: return .voltage
         case .identifier: return .identifier
         case .digitalPin: return .digitalPin
+        case .analogPin: return .analogPin
         }
     }
 }
@@ -159,6 +165,8 @@ internal extension SystemGetCommand {
         case let .rom(address):
             return [address.description]
         case let .digitalPin(pin):
+            return [pin.rawValue]
+        case let .analogPin(pin):
             return [pin.rawValue]
         case .version,
              .voltage,
@@ -220,4 +228,7 @@ public enum SystemGetCommandType: String {
     
     /// Returns the state of the pin, either low (‘0’) or high (‘1’).
     case digitalPin = "pindig"
+    
+    /// This command returns a 10-bit analog value for the queried pin, where 0 represents 0V and 1023 represents VDD. An ADC conversion on the VDD pin can be performed by using the command sys get vdd.
+    case analogPin = "pinana"
 }

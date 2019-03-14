@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum CommandType: String {
+public enum Command: String {
     
     /**
      Issues system level behavior actions, gathers status information on the firmware and hardware version, or accesses the module user EEPROM memory.

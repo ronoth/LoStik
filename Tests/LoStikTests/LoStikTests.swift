@@ -27,6 +27,8 @@ final class LoStikTests: XCTestCase {
             (.system(.get(.digitalPin(.gpio5))), "sys get pindig GPIO5"),
             (.system(.get(.analogPin(.gpio0))), "sys get pinana GPIO0"),
             (.mac(.reset), "mac reset"),
+            (.mac(.pause), "mac pause"),
+            (.mac(.forceEnable), "mac forceENABLE"),
             (.mac(.send(.confirmed, LoStik.Mac.Port(rawValue: 4)!, Data([0x5A, 0x5B, 0x5B]))), "mac tx cnf 4 5A5B5B")
         ]
         
@@ -61,7 +63,7 @@ final class LoStikTests: XCTestCase {
     func testConnection() {
         
         do {
-            let loStik = try LoStik(port: "/dev/cu.wchusbserial14210")
+            let loStik = try LoStik(port: "/dev/cu.wchusbserial14230")
             let version = try loStik.system.version()
             print("Version: \(version)")
             let hardwareIdentifier = try loStik.system.hardwareIdentifier()
@@ -73,6 +75,10 @@ final class LoStikTests: XCTestCase {
             try loStik.system.setPin(.gpio11, state: .on)
             usleep(100_000)
             try loStik.system.setPin(.gpio11, state: .off)
+            // stop LoRaWan
+            let pauseDuration = try loStik.mac.pause()
+            print("Pausing LoRaWan for \(pauseDuration) miliseconds")
+            
         }
         catch { XCTFail("Error: \(error)") }
     }

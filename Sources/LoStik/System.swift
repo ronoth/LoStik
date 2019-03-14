@@ -204,38 +204,41 @@ public extension LoStik.System {
     }
 }
 
-public enum SystemCommand: Equatable, Hashable {
+public extension LoStik.System {
     
-    /**
-     This command puts the system to Sleep for the specified number of milliseconds. The module can be forced to exit from Sleep by sending a break condition followed by a 0x55 character at the new baud rate.
-    */
-    case sleep(UInt)
-    
-    /**
-     This command resets and restarts the module; stored internal configurations will be loaded automatically upon reboot.
-    */
-    case reset
-    
-    /**
-     This command deletes the current RN2903 module application firmware and prepares it for firmware upgrade. the module bootloader is ready to receive new firmware.
-     */
-    case eraseFirmware
-    
-    /**
-     This command resets the module’s configuration data and user EEPROM to factory default values and restarts the module. After factoryRESET, the module will automatically reset and all configuration parameters are restored to factory default values.
-     */
-    case factoryReset
-    
-    /// System set commands
-    case set(SystemSetCommand)
-    
-    /// System get commands
-    case get(SystemGetCommand)
+    public enum Command: Equatable, Hashable {
+        
+        /**
+         This command puts the system to Sleep for the specified number of milliseconds. The module can be forced to exit from Sleep by sending a break condition followed by a 0x55 character at the new baud rate.
+         */
+        case sleep(UInt)
+        
+        /**
+         This command resets and restarts the module; stored internal configurations will be loaded automatically upon reboot.
+         */
+        case reset
+        
+        /**
+         This command deletes the current RN2903 module application firmware and prepares it for firmware upgrade. the module bootloader is ready to receive new firmware.
+         */
+        case eraseFirmware
+        
+        /**
+         This command resets the module’s configuration data and user EEPROM to factory default values and restarts the module. After factoryRESET, the module will automatically reset and all configuration parameters are restored to factory default values.
+         */
+        case factoryReset
+        
+        /// System set commands
+        case set(Set)
+        
+        /// System get commands
+        case get(Get)
+    }
 }
 
-public extension SystemCommand {
+public extension LoStik.System.Command {
     
-    var type: SystemCommandType {
+    var type: CommandType {
         
         switch self {
         case .sleep: return .sleep
@@ -248,7 +251,7 @@ public extension SystemCommand {
     }
 }
 
-internal extension SystemCommand {
+internal extension LoStik.System.Command {
     
     var arguments: [String] {
         
@@ -267,33 +270,38 @@ internal extension SystemCommand {
     }
 }
 
-public enum SystemSetCommand: Equatable, Hashable {
+public extension LoStik.System.Command {
     
-    /**
-     This command allows the user to modify the user EEPROM at <address> with the value supplied by <data>. Both <address> and <data> must be entered as hex values. The user EEPROM memory is located inside the MCU on the module.
-     
-     Example:
-     
-     ```
-     sys set nvm 300 A5 // Stores the value 0xA5 at user EEPROM address 0x300.
-     ```
-     */
-    case rom(EEPROMAddress, UInt8)
-    
-    /**
-     This command allows the user to modify the unused pins available for use by the module. The selected <pinname> is driven high or low depending on the desired <pinstate>
-     */
-    case digitalPin(Pin, Pin.State)
-    
-    /**
-     module and set them as digital output, digital input or analog.
-     */
-    case pinMode(Pin, Pin.Mode)
+    public enum Set: Equatable, Hashable {
+        
+        /**
+         This command allows the user to modify the user EEPROM at <address> with the value supplied by <data>. Both <address> and <data> must be entered as hex values. The user EEPROM memory is located inside the MCU on the module.
+         
+         Example:
+         
+         ```
+         sys set nvm 300 A5 // Stores the value 0xA5 at user EEPROM address 0x300.
+         ```
+         */
+        case rom(EEPROMAddress, UInt8)
+        
+        /**
+         This command allows the user to modify the unused pins available for use by the module. The selected <pinname> is driven high or low depending on the desired <pinstate>
+         */
+        case digitalPin(Pin, Pin.State)
+        
+        /**
+         module and set them as digital output, digital input or analog.
+         */
+        case pinMode(Pin, Pin.Mode)
+    }
 }
 
-public extension SystemSetCommand {
+
+
+public extension LoStik.System.Command.Set {
     
-    var type: SystemSetCommandType {
+    var type: CommandType {
         
         switch self {
         case .rom: return .rom
@@ -303,7 +311,7 @@ public extension SystemSetCommand {
     }
 }
 
-internal extension SystemSetCommand {
+internal extension LoStik.System.Command.Set {
     
     var arguments: [String] {
         
@@ -318,32 +326,35 @@ internal extension SystemSetCommand {
     }
 }
 
-public enum SystemGetCommand: Equatable, Hashable {
+public extension LoStik.System.Command {
     
-    /// Returns the information on hardware platform, firmware version, release date.
-    case version
-    
-    /// Returns data from the requested user EEPROM <address>.
-    case rom(EEPROMAddress)
-    
-    /// Returns measured voltage in mV.
-    case voltage
-    
-    /// Returns the preprogrammed EUI node address.
-    case identifier
-    
-    /// Returns the state of the pin, either low (‘0’) or high (‘1’).
-    case digitalPin(Pin)
-    
-    /// This command returns a 10-bit analog value for the queried pin,
-    /// where 0 represents 0V and 1023 represents VDD.
-    /// An ADC conversion on the VDD pin can be performed by using the command `sys get vdd`.
-    case analogPin(Pin)
+    public enum Get: Equatable, Hashable {
+        
+        /// Returns the information on hardware platform, firmware version, release date.
+        case version
+        
+        /// Returns data from the requested user EEPROM <address>.
+        case rom(EEPROMAddress)
+        
+        /// Returns measured voltage in mV.
+        case voltage
+        
+        /// Returns the preprogrammed EUI node address.
+        case identifier
+        
+        /// Returns the state of the pin, either low (‘0’) or high (‘1’).
+        case digitalPin(Pin)
+        
+        /// This command returns a 10-bit analog value for the queried pin,
+        /// where 0 represents 0V and 1023 represents VDD.
+        /// An ADC conversion on the VDD pin can be performed by using the command `sys get vdd`.
+        case analogPin(Pin)
+    }
 }
 
-public extension SystemGetCommand {
+public extension LoStik.System.Command.Get {
     
-    var type: SystemGetCommandType {
+    var type: CommandType {
         
         switch self {
         case .version: return .version
@@ -356,7 +367,7 @@ public extension SystemGetCommand {
     }
 }
 
-internal extension SystemGetCommand {
+internal extension LoStik.System.Command.Get {
     
     var arguments: [String] {
         
@@ -375,59 +386,68 @@ internal extension SystemGetCommand {
     }
 }
 
-public enum SystemCommandType: String {
+public extension LoStik.System.Command {
     
-    /// Puts the system in Sleep for a finite number of milliseconds.
-    case sleep
-    
-    /// Resets and restarts the module.
-    case reset
-    
-    /// Deletes the current RN2903 module application firmware and prepares it for firmware upgrade.
-    /// the module bootloader is ready to receive new firmware.
-    case eraseFirmware = "eraseFW"
-    
-    /// Resets the module’s configuration data and user EEPROM to factory default values and restarts the module.
-    case factoryReset = "factoryRESET"
-    
-    /// Sets specified system parameter values.
-    case set
-    
-    /// Gets specified system parameter values.
-    case get
+    public enum CommandType: String {
+        
+        /// Puts the system in Sleep for a finite number of milliseconds.
+        case sleep
+        
+        /// Resets and restarts the module.
+        case reset
+        
+        /// Deletes the current RN2903 module application firmware and prepares it for firmware upgrade.
+        /// the module bootloader is ready to receive new firmware.
+        case eraseFirmware = "eraseFW"
+        
+        /// Resets the module’s configuration data and user EEPROM to factory default values and restarts the module.
+        case factoryReset = "factoryRESET"
+        
+        /// Sets specified system parameter values.
+        case set
+        
+        /// Gets specified system parameter values.
+        case get
+    }
 }
 
-public enum SystemSetCommandType: String {
+public extension LoStik.System.Command.Set {
     
-    /// Stores <data> to a location <address> of user EEPROM.
-    case rom = "nvm"
-    
-    /// Allows user to set and clear available digital pins.
-    case digitalPin = "pindig"
-    
-    /// Allows the user to set the state of the pins as digital output, digital input or analog.
-    case pinMode = "pinmode"
+    public enum CommandType: String {
+        
+        /// Stores <data> to a location <address> of user EEPROM.
+        case rom = "nvm"
+        
+        /// Allows user to set and clear available digital pins.
+        case digitalPin = "pindig"
+        
+        /// Allows the user to set the state of the pins as digital output, digital input or analog.
+        case pinMode = "pinmode"
+    }
 }
 
-public enum SystemGetCommandType: String {
+public extension LoStik.System.Command.Get {
     
-    /**
-     This command returns the information related to the hardware platform, firmware version, release date and time-stamp on firmware creation.
-     */
-    case version = "ver"
-    
-    /// Returns data from the requested user EEPROM <address>.
-    case rom = "nvm"
-    
-    /// Returns measured voltage in mV.
-    case voltage = "vdd"
-    
-    /// Returns the preprogrammed EUI node address.
-    case identifier = "hweui"
-    
-    /// Returns the state of the pin, either low (‘0’) or high (‘1’).
-    case digitalPin = "pindig"
-    
-    /// This command returns a 10-bit analog value for the queried pin, where 0 represents 0V and 1023 represents VDD. An ADC conversion on the VDD pin can be performed by using the command sys get vdd.
-    case analogPin = "pinana"
+    public enum CommandType: String {
+        
+        /**
+         This command returns the information related to the hardware platform, firmware version, release date and time-stamp on firmware creation.
+         */
+        case version = "ver"
+        
+        /// Returns data from the requested user EEPROM <address>.
+        case rom = "nvm"
+        
+        /// Returns measured voltage in mV.
+        case voltage = "vdd"
+        
+        /// Returns the preprogrammed EUI node address.
+        case identifier = "hweui"
+        
+        /// Returns the state of the pin, either low (‘0’) or high (‘1’).
+        case digitalPin = "pindig"
+        
+        /// This command returns a 10-bit analog value for the queried pin, where 0 represents 0V and 1023 represents VDD. An ADC conversion on the VDD pin can be performed by using the command sys get vdd.
+        case analogPin = "pinana"
+    }
 }

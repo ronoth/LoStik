@@ -26,6 +26,8 @@ final class LoStikTests: XCTestCase {
             (.system(.get(.identifier)), "sys get hweui"),
             (.system(.get(.digitalPin(.gpio5))), "sys get pindig GPIO5"),
             (.system(.get(.analogPin(.gpio0))), "sys get pinana GPIO0"),
+            (.mac(.reset), "mac reset"),
+            (.mac(.send(.confirmed, LoStik.Mac.Port(rawValue: 4)!, Data([0x5A, 0x5B, 0x5B]))), "mac tx cnf 4 5A5B5B")
         ]
         
         for (command, string) in commands {

@@ -5,22 +5,23 @@
 //  Created by Alsey Coleman Miller on 3/14/19.
 //
 
+/// LoStik Command
 public enum Command: Equatable, Hashable {
     
     /**
      Issues system level behavior actions, gathers status information on the firmware and hardware version, or accesses the module user EEPROM memory.
      */
-    case system(SystemCommand)
+    case system(LoStik.System.Command)
     
     /**
      Issues LoRaWAN protocol network communication behaviors, actions and configurations commands.
      */
-    case mac(SystemCommand)
+    case mac(LoStik.Mac.Command)
     
     /**
      Issues radio specific configurations, directly accessing and updating the transceiver setup.
      */
-    case radio(SystemCommand)
+    case radio(LoStik.System.Command)
 }
 
 public extension Command {

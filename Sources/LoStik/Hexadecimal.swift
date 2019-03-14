@@ -5,6 +5,8 @@
 //  Created by Alsey Coleman Miller on 3/14/19.
 //
 
+import Foundation
+
 internal extension UInt8 {
     
     func toHexadecimal() -> String {
@@ -49,5 +51,13 @@ internal extension UInt64 {
         }
         
         return string.uppercased()
+    }
+}
+
+internal extension Data {
+    
+    func toHexadecimal() -> String {
+        
+        return reduce("", { $0 + $1.toHexadecimal() })
     }
 }

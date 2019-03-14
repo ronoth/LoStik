@@ -5,6 +5,22 @@
 //  Created by Alsey Coleman Miller on 3/14/19.
 //
 
+public extension LoStik {
+    
+    func getVersion() throws -> Version {
+        
+        try send(command: .system(.get(.version)))
+        let response = try read()
+        
+        print(response)
+        
+        guard let version = Version(rawValue: response)
+            else { throw LoStikError.invalidParameters }
+        
+        return version
+    }
+}
+
 public enum SystemCommand: Equatable, Hashable {
     
     /**

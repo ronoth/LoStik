@@ -17,19 +17,20 @@ public final class LoStik {
         serialPort.setSettings(
             receiveRate: .baud57600,
             transmitRate: .baud57600,
-            minimumBytesToRead: 0, // FIXME: 2?
+            minimumBytesToRead: 2, // FIXME: 2?
+            timeout: 0,
             parityType: .none,
             dataBitsSize: .bits8
         )
     }
     
-    internal func send(command: String) throws {
+    internal func send(command: Command) throws {
         
-        let _ = try serialPort.writeString(command)
+        let _ = try serialPort.writeString(command.description + String(CChar(0x0D)) + String(CChar(0x0A)))
     }
     
     internal func read() throws -> String {
         
-        return try serialPort.readLine()
+        return try serialPort.readLine() //.readUntilChar(CChar(0x0D))
     }
 }

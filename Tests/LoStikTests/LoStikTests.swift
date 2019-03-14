@@ -43,13 +43,33 @@ final class LoStikTests: XCTestCase {
         XCTAssertEqual(version.description, string)
     }
     
+    func testHardwareIdentifier() {
+        
+        let values: [(String, UInt64)] = [
+            ("0004A30B0026A211", 0x0004A30B0026A211),
+            ("0004A30B00274135", 0x0004A30B00274135)
+        ]
+        
+        for (string, value) in values {
+            XCTAssertEqual(string, HardwareIdentifier(rawValue: value).description)
+        }
+    }
+    
     func testConnection() {
         
         do {
             let loStik = try LoStik(port: "/dev/cu.wchusbserial14210")
             let version = try loStik.getVersion()
             print("Version: \(version)")
-            dump(version)
+            let hardwareIdentifier = try loStik.getHardwareIdentifier()
+            print("Hardware Identifier: \(hardwareIdentifier)")
+            // blink leds
+            try loStik.setPin(.gpio10, state: .on)
+            sleep(1)
+            try loStik.setPin(.gpio10, state: .off)
+            try loStik.setPin(.gpio11, state: .on)
+            sleep(1)
+            try loStik.setPin(.gpio11, state: .off)
         }
         catch { XCTFail("Error: \(error)") }
     }

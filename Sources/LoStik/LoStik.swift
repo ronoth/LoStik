@@ -31,13 +31,11 @@ public final class LoStik {
         assert(writtenBytes == command.description.utf8.count + 2)
     }
     
-    internal func read() throws -> String {
+    internal func read() throws -> ResponseCode {
         
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
         
-        defer {
-            buffer.deallocate()
-        }
+        defer { buffer.deallocate() }
         
         var data = Data(capacity: 3)
         
@@ -59,6 +57,6 @@ public final class LoStik {
         guard let response = String(data: data.prefix(data.count - 2), encoding: .utf8)
             else { throw PortError.stringsMustBeUTF8 }
         
-        return response
+        return ResponseCode(rawValue: response)
     }
 }

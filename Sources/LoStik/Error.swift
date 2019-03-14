@@ -8,5 +8,5 @@
 /// LoStik Error
 public enum LoStikError: Error {
     
-    case invalidParameters
+    case errorCode(ResponseCode)
 }

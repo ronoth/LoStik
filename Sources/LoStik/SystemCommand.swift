@@ -12,10 +12,39 @@ public extension LoStik {
         try send(command: .system(.get(.version)))
         let response = try read()
         
-        guard let version = Version(rawValue: response)
-            else { throw LoStikError.invalidParameters }
+        guard let version = Version(rawValue: response.rawValue)
+            else { throw LoStikError.errorCode(response) }
         
         return version
+    }
+    
+    func getHardwareIdentifier() throws -> HardwareIdentifier {
+        
+        try send(command: .system(.get(.identifier)))
+        let response = try read()
+        
+        guard let number = UInt64(response.rawValue, radix: 16)
+            else { throw LoStikError.errorCode(response) }
+        
+        return HardwareIdentifier(rawValue: number)
+    }
+    
+    func setPin(_ pin: Pin, state: Pin.State) throws {
+        
+        try send(command: .system(.set(.digitalPin(pin, state))))
+        let response = try read()
+        
+        guard response == .ok
+            else { throw LoStikError.errorCode(response) }
+    }
+    
+    func setPin(_ pin: Pin, mode: Pin.Mode) throws {
+        
+        try send(command: .system(.set(.pinMode(pin, mode))))
+        let response = try read()
+        
+        guard response == .ok
+            else { throw LoStikError.errorCode(response) }
     }
 }
 

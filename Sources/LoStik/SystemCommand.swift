@@ -7,7 +7,7 @@
 
 public extension LoStik {
     
-    /// System view of the LoStik
+    /// System view of the LoStik.
     var system: System { return System(device: self) }
     
     public struct System {
@@ -22,7 +22,101 @@ public extension LoStik {
 
 public extension LoStik.System {
     
-    func getVersion() throws -> Version {
+    /// This command puts the system to Sleep for the specified number of milliseconds.
+    func sleep(_ miliseconds: UInt) throws {
+        
+        try device.send(command: .system(.sleep(miliseconds)))
+        let response = try device.read()
+        
+        guard response == .ok
+            else { throw LoStikError.errorCode(response) }
+    }
+    
+    /**
+     This command resets and restarts the module; stored internal configurations will be loaded automatically upon reboot.
+     */
+    func reset() throws -> Version {
+        
+        try device.send(command: .system(.reset))
+        let response = try device.read()
+        
+        guard let version = Version(rawValue: response.rawValue)
+            else { throw LoStikError.errorCode(response) }
+        
+        return version
+    }
+    
+    /**
+     This command deletes the current module application firmware and prepares it for firmware upgrade. the module bootloader is ready to receive new firmware.
+     */
+    func eraseFirmware() throws {
+        
+        try device.send(command: .system(.eraseFirmware)) // Response: no response
+    }
+    
+    /**
+     This command resets the module’s configuration data and user EEPROM to factory default values and restarts the module. After factory reset,the module will automatically reset and all configuration parameters are restored to factory default values.
+     */
+    func factoryReset() throws -> Version {
+        
+        try device.send(command: .system(.factoryReset))
+        let response = try device.read()
+        
+        guard let version = Version(rawValue: response.rawValue)
+            else { throw LoStikError.errorCode(response) }
+        
+        return version
+    }
+}
+
+public extension LoStik.System {
+    
+    /**
+     This command allows the user to modify the user EEPROM at `address` with the value supplied by `data`.
+     The user EEPROM memory is located inside the MCU on the module.
+     */
+    func setRom(_ data: UInt8, at address: EEPROMAddress) throws {
+        
+        try device.send(command: .system(.set(.rom(address, data))))
+        let response = try device.read()
+        
+        guard response == .ok
+            else { throw LoStikError.errorCode(response) }
+    }
+    
+    /**
+     This command allows the user to modify the unused pins available for use by the module. The selected `pin` is driven high or low depending on the desired `state`.
+     */
+    func setPin(_ pin: Pin, state: Pin.State) throws {
+        
+        try device.send(command: .system(.set(.digitalPin(pin, state))))
+        let response = try device.read()
+        
+        guard response == .ok
+            else { throw LoStikError.errorCode(response) }
+    }
+    
+    /**
+     This command allows the user to modify the unused pins availible for use by the module and set them as digital output, digital input or analog.
+     
+     - Note: Only the GPIO0-3, GPIO5-GPIO13 pins can be configured as analog pins.
+     */
+    func setPin(_ pin: Pin, mode: Pin.Mode) throws {
+        
+        try device.send(command: .system(.set(.pinMode(pin, mode))))
+        let response = try device.read()
+        
+        guard response == .ok
+            else { throw LoStikError.errorCode(response) }
+    }
+}
+
+public extension LoStik.System {
+    
+    /**
+     This command returns the information related to the hardware platform, firmware version, release date and time-stamp on firmware creation.
+     */
+    func version() throws -> Version {
         
         try device.send(command: .system(.get(.version)))
         let response = try device.read()
@@ -33,7 +127,43 @@ public extension LoStik.System {
         return version
     }
     
-    func getHardwareIdentifier() throws -> HardwareIdentifier {
+    /**
+     This command returns the data stored in the user EEPROM of the module at the requested `address` location.
+     */
+    func rom(at address: EEPROMAddress) throws -> UInt8 {
+        
+        try device.send(command: .system(.get(.rom(address))))
+        let response = try device.read()
+        
+        guard let data = UInt8(response.rawValue, radix: 16)
+            else { throw LoStikError.errorCode(response) }
+        
+        return data
+    }
+    
+    /**
+     This command requires the module to do an ADC conversion on the VDD. The measurement is converted and returned as a voltage (mV).
+     
+     - Returns: Decimal value from 0 to 3600.
+     */
+    func voltage() throws -> UInt {
+        
+        try device.send(command: .system(.get(.voltage)))
+        let response = try device.read()
+        
+        guard let voltage = UInt(response.rawValue)
+            else { throw LoStikError.errorCode(response) }
+        
+        return voltage
+    }
+    
+    /**
+     This command reads the preprogrammed EUI node address from the module.
+     The value returned by this command is a globally unique number provided by Microchip.
+     
+     - Note: The preprogrammed EUI node address is a read-only value and cannot be changed or erased.
+     */
+    func hardwareIdentifier() throws -> HardwareIdentifier {
         
         try device.send(command: .system(.get(.identifier)))
         let response = try device.read()
@@ -44,22 +174,33 @@ public extension LoStik.System {
         return HardwareIdentifier(rawValue: number)
     }
     
-    func setPin(_ pin: Pin, state: Pin.State) throws {
+    /**
+     This command returns the state of the queried pin, either ‘0’ (low) or ‘1’ (high).
+     */
+    func digitalState(for pin: Pin) throws -> Pin.State {
         
-        try device.send(command: .system(.set(.digitalPin(pin, state))))
+        try device.send(command: .system(.get(.digitalPin(pin))))
         let response = try device.read()
         
-        guard response == .ok
+        guard let stateNumber = Int(response.rawValue),
+            let state = Pin.State(rawValue: stateNumber)
             else { throw LoStikError.errorCode(response) }
+        
+        return state
     }
     
-    func setPin(_ pin: Pin, mode: Pin.Mode) throws {
+    /**
+     This command returns a 10-bit analog value for the queried pin, where 0 represents 0V and 1023 represents VDD. An ADC conversion on the VDD pin can be performed by using `voltage()`.
+     */
+    func analogState(for pin: Pin) throws -> UInt {
         
-        try device.send(command: .system(.set(.pinMode(pin, mode))))
+        try device.send(command: .system(.get(.analogPin(pin))))
         let response = try device.read()
         
-        guard response == .ok
+        guard let stateNumber = UInt(response.rawValue)
             else { throw LoStikError.errorCode(response) }
+        
+        return stateNumber
     }
 }
 
@@ -71,17 +212,17 @@ public enum SystemCommand: Equatable, Hashable {
     case sleep(UInt)
     
     /**
-     This command resets and restarts the RN2903 module; stored internal configurations will be loaded automatically upon reboot.
+     This command resets and restarts the module; stored internal configurations will be loaded automatically upon reboot.
     */
     case reset
     
     /**
-     This command deletes the current RN2903 module application firmware and prepares it for firmware upgrade. The RN2903 module bootloader is ready to receive new firmware.
+     This command deletes the current RN2903 module application firmware and prepares it for firmware upgrade. the module bootloader is ready to receive new firmware.
      */
     case eraseFirmware
     
     /**
-     This command resets the module’s configuration data and user EEPROM to factory default values and restarts the module. After factoryRESET, the RN2903 module will automatically reset and all configuration parameters are restored to factory default values.
+     This command resets the module’s configuration data and user EEPROM to factory default values and restarts the module. After factoryRESET, the module will automatically reset and all configuration parameters are restored to factory default values.
      */
     case factoryReset
     
@@ -239,14 +380,14 @@ public enum SystemCommandType: String {
     /// Puts the system in Sleep for a finite number of milliseconds.
     case sleep
     
-    /// Resets and restarts the RN2903 module.
+    /// Resets and restarts the module.
     case reset
     
     /// Deletes the current RN2903 module application firmware and prepares it for firmware upgrade.
-    /// The RN2903 module bootloader is ready to receive new firmware.
+    /// the module bootloader is ready to receive new firmware.
     case eraseFirmware = "eraseFW"
     
-    /// Resets the RN2903 module’s configuration data and user EEPROM to factory default values and restarts the RN2903 module.
+    /// Resets the module’s configuration data and user EEPROM to factory default values and restarts the module.
     case factoryReset = "factoryRESET"
     
     /// Sets specified system parameter values.

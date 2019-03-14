@@ -6,7 +6,8 @@ final class LoStikTests: XCTestCase {
     
     static var allTests = [
         ("testCommand", testCommand),
-        ("testVersion", testVersion)
+        ("testVersion", testVersion),
+        ("testHardwareIdentifier", testHardwareIdentifier)
         ]
     
     func testCommand() {
@@ -59,17 +60,17 @@ final class LoStikTests: XCTestCase {
         
         do {
             let loStik = try LoStik(port: "/dev/cu.wchusbserial14210")
-            let version = try loStik.getVersion()
+            let version = try loStik.system.getVersion()
             print("Version: \(version)")
-            let hardwareIdentifier = try loStik.getHardwareIdentifier()
+            let hardwareIdentifier = try loStik.system.getHardwareIdentifier()
             print("Hardware Identifier: \(hardwareIdentifier)")
             // blink leds
-            try loStik.setPin(.gpio10, state: .on)
-            sleep(1)
-            try loStik.setPin(.gpio10, state: .off)
-            try loStik.setPin(.gpio11, state: .on)
-            sleep(1)
-            try loStik.setPin(.gpio11, state: .off)
+            try loStik.system.setPin(.gpio10, state: .on)
+            usleep(100_000)
+            try loStik.system.setPin(.gpio10, state: .off)
+            try loStik.system.setPin(.gpio11, state: .on)
+            usleep(100_000)
+            try loStik.system.setPin(.gpio11, state: .off)
         }
         catch { XCTFail("Error: \(error)") }
     }

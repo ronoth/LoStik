@@ -7,10 +7,25 @@
 
 public extension LoStik {
     
+    /// System view of the LoStik
+    var system: System { return System(device: self) }
+    
+    public struct System {
+        
+        internal let device: LoStik
+        
+        internal init(device: LoStik) {
+            self.device = device
+        }
+    }
+}
+
+public extension LoStik.System {
+    
     func getVersion() throws -> Version {
         
-        try send(command: .system(.get(.version)))
-        let response = try read()
+        try device.send(command: .system(.get(.version)))
+        let response = try device.read()
         
         guard let version = Version(rawValue: response.rawValue)
             else { throw LoStikError.errorCode(response) }
@@ -20,8 +35,8 @@ public extension LoStik {
     
     func getHardwareIdentifier() throws -> HardwareIdentifier {
         
-        try send(command: .system(.get(.identifier)))
-        let response = try read()
+        try device.send(command: .system(.get(.identifier)))
+        let response = try device.read()
         
         guard let number = UInt64(response.rawValue, radix: 16)
             else { throw LoStikError.errorCode(response) }
@@ -31,8 +46,8 @@ public extension LoStik {
     
     func setPin(_ pin: Pin, state: Pin.State) throws {
         
-        try send(command: .system(.set(.digitalPin(pin, state))))
-        let response = try read()
+        try device.send(command: .system(.set(.digitalPin(pin, state))))
+        let response = try device.read()
         
         guard response == .ok
             else { throw LoStikError.errorCode(response) }
@@ -40,8 +55,8 @@ public extension LoStik {
     
     func setPin(_ pin: Pin, mode: Pin.Mode) throws {
         
-        try send(command: .system(.set(.pinMode(pin, mode))))
-        let response = try read()
+        try device.send(command: .system(.set(.pinMode(pin, mode))))
+        let response = try device.read()
         
         guard response == .ok
             else { throw LoStikError.errorCode(response) }

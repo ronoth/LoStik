@@ -1,3 +1,10 @@
+//
+//  LoStik.swift
+//  LoStik
+//
+//  Created by Alsey Coleman Miller on 3/13/19.
+//
+
 import Foundation
 import SwiftSerial
 
@@ -17,7 +24,7 @@ public final class LoStik {
         serialPort.setSettings(
             receiveRate: .baud57600,
             transmitRate: .baud57600,
-            minimumBytesToRead: 0, // FIXME: 2?
+            minimumBytesToRead: 0,
             timeout: 10,
             parityType: .none,
             dataBitsSize: .bits8

@@ -5,8 +5,6 @@
 //  Created by Alsey Coleman Miller on 3/14/19.
 //
 
-import Foundation
-
 /// LoStik Response Code
 public struct ResponseCode: Equatable, Hashable, RawRepresentable {
     
@@ -26,8 +24,11 @@ public extension ResponseCode {
     /// If parameters are not valid.
     static let invalidParameters: ResponseCode = "invalid_param"
     
-    ///  if the network is not joined.
+    /// If the network is not joined.
     static let notJoined: ResponseCode = "not_joined"
+    
+    /// No channels are available
+    static let noAvailibleChannels: ResponseCode = "no_free_ch"
 }
 
 // MARK: - CustomStringConvertible

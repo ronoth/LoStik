@@ -60,9 +60,9 @@ final class LoStikTests: XCTestCase {
         
         do {
             let loStik = try LoStik(port: "/dev/cu.wchusbserial14210")
-            let version = try loStik.system.getVersion()
+            let version = try loStik.system.version()
             print("Version: \(version)")
-            let hardwareIdentifier = try loStik.system.getHardwareIdentifier()
+            let hardwareIdentifier = try loStik.system.hardwareIdentifier()
             print("Hardware Identifier: \(hardwareIdentifier)")
             // blink leds
             try loStik.system.setPin(.gpio10, state: .on)

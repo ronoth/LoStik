@@ -12,8 +12,6 @@ public extension LoStik {
         try send(command: .system(.get(.version)))
         let response = try read()
         
-        print(response)
-        
         guard let version = Version(rawValue: response)
             else { throw LoStikError.invalidParameters }
         

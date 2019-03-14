@@ -43,4 +43,14 @@ final class LoStikTests: XCTestCase {
         XCTAssertEqual(version.description, string)
     }
     
+    func testConnection() {
+        
+        do {
+            let loStik = try LoStik(port: "/dev/cu.wchusbserial14210")
+            let version = try loStik.getVersion()
+            print("Version: \(version)")
+            dump(version)
+        }
+        catch { XCTFail("Error: \(error)") }
+    }
 }

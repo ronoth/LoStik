@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftSerial",
+        "repositoryURL": "https://github.com/MillerTechnologyPeru/SwiftSerial.git",
+        "state": {
+          "branch": "master",
+          "revision": "581ebc7e100ed42a91a29d6f6b09b1bd28eb76ef",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

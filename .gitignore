@@ -5,3 +5,5 @@ examples/bin
 examples/lib
 examples/include
 .vscode/
+.build/
+LoStik.xcodeproj

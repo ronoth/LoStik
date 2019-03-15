@@ -34,7 +34,7 @@ public extension LoStik.Radio {
     func recieve(windowSize: UInt16 = 0) throws -> Data {
         
         try device.send(command: .radio(.receive(windowSize)))
-        let response = try device.read()
+        var response = try device.read()
         
         /**
          Response after entering the command:
@@ -50,14 +50,14 @@ public extension LoStik.Radio {
          • radio_rx <data> – if reception was successful, <data>: hexadecimal value that was received;
          • radio_err – if reception was not successful, reception time-out occurred
          */
-        let responseDataString = try device.read()
+        response = try device.read()
         
         let prefix = "radio_rx "
         
-        guard responseDataString.rawValue.contains(prefix)
-            else { throw LoStikError.errorCode(responseDataString) }
+        guard response.rawValue.contains(prefix)
+            else { throw LoStikError.errorCode(response) }
         
-        let hexadecimalString = responseDataString.rawValue.replacingOccurrences(of: prefix, with: "")
+        let hexadecimalString = response.rawValue.replacingOccurrences(of: prefix, with: "")
         
         guard let data = Data(hexadecimal: hexadecimalString)
             else { throw LoStikError.errorCode(response) }
@@ -72,12 +72,28 @@ public extension LoStik.Radio {
      */
     func transmit(_ data: Data) throws {
         
-        assert(data.count <= 255, "maximum 255 bytes for LoRa modulation")
+        assert(data.count <= 255, "Maximum 255 bytes for LoRa modulation")
         
         try device.send(command: .radio(.transmit(data)))
-        let response = try device.read()
+        var response = try device.read()
         
+        /**
+         Response after entering the command:
+         • ok – if parameter is valid and the transceiver is configured in Transmit mode
+         • invalid_param – if parameter is not valid
+         • busy – if the transceiver is currently busy
+         */
         guard response == .ok
+            else { throw LoStikError.errorCode(response) }
+        
+        /**
+         Response after the effective transmission:
+         • radio_tx_ok – if transmission was successful
+         • radio_err – if transmission was unsuccessful (interrupted by radio Watchdog
+         Timer time-out)
+         */
+        response = try device.read()
+        guard response == .transmissionOk
             else { throw LoStikError.errorCode(response) }
     }
 }

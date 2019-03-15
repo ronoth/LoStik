@@ -29,7 +29,9 @@ final class LoStikTests: XCTestCase {
             (.mac(.reset), "mac reset"),
             (.mac(.pause), "mac pause"),
             (.mac(.forceEnable), "mac forceENABLE"),
-            (.mac(.send(.confirmed, LoStik.Mac.Port(rawValue: 4)!, Data([0x5A, 0x5B, 0x5B]))), "mac tx cnf 4 5A5B5B")
+            (.mac(.send(.confirmed, LoStik.Mac.Port(rawValue: 4)!, Data([0x5A, 0x5B, 0x5B]))), "mac tx cnf 4 5A5B5B"),
+            (.radio(.receive(0)), "radio rx 0"),
+            (.radio(.transmit(Data([]))), "radio tx 48656C6C6F")
         ]
         
         for (command, string) in commands {

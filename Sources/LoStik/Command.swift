@@ -21,7 +21,7 @@ public enum Command: Equatable, Hashable {
     /**
      Issues radio specific configurations, directly accessing and updating the transceiver setup.
      */
-    case radio(LoStik.System.Command)
+    case radio(LoStik.Radio.Command)
 }
 
 public extension Command {

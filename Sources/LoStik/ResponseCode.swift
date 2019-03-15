@@ -21,6 +21,12 @@ public extension ResponseCode {
     /// Success.
     static let ok: ResponseCode = "ok"
     
+    /// Transmission was successful.
+    static let transmissionOk: ResponseCode = "radio_tx_ok"
+    
+    /// If the transceiver is currently busy. 
+    static let busy: ResponseCode = "busy"
+    
     /// If parameters are not valid.
     static let invalidParameters: ResponseCode = "invalid_param"
     
@@ -29,6 +35,9 @@ public extension ResponseCode {
     
     /// No channels are available
     static let noAvailibleChannels: ResponseCode = "no_free_ch"
+    
+    /// If reception was not successful, reception time-out occurred
+    static let radioError: ResponseCode = "radio_err"
 }
 
 // MARK: - CustomStringConvertible
@@ -50,5 +59,3 @@ extension ResponseCode: ExpressibleByStringLiteral {
         self.init(rawValue: value)
     }
 }
-
-

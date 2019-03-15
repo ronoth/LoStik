@@ -99,7 +99,7 @@ public extension LoStik.Mac {
         /**
          Transmit data
         */
-        case send(UplinkPayloadType, Port, Data)
+        case transmit(UplinkPayloadType, Port, Data)
         
         /**
          The network can issue a certain command (Duty Cycle Request frame with parameter 255) that would require the RN2903 module to go silent immediately. This mechanism disables any further communication of the module, effectively isolating it from the network.Using mac force enable,after this network command has bee nreceived, restores the module’s connectivity by allowing it to send data.
@@ -176,7 +176,7 @@ public extension LoStik.Mac.Command {
         
         switch self {
         case .reset: return .reset
-        case .send: return .send
+        case .transmit: return .transmit
         case .forceEnable: return .forceEnable
         case .pause: return .pause
         case .resume: return .resume
@@ -189,7 +189,7 @@ internal extension LoStik.Mac.Command {
     var arguments: [String] {
         
         switch self {
-        case let .send(type, port, data):
+        case let .transmit(type, port, data):
             return [type.rawValue, port.description, data.toHexadecimal()]
         case .reset,
              .forceEnable,
@@ -208,7 +208,7 @@ public extension LoStik.Mac.Command {
         case reset
         
         /// Sends the data string on a specified port number.
-        case send = "tx"
+        case transmit = "tx"
         
         /// Informs the module to join the configured network.
         case join

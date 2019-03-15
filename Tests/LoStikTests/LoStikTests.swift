@@ -64,8 +64,14 @@ final class LoStikTests: XCTestCase {
     
     func testConnection() {
         
+        #if os(Linux)
+        let port = "/dev/ttyUSB0"
+        #elseif os(macOS)
+        let port = "/dev/cu.wchusbserial14230"
+        #endif
+        
         do {
-            let loStik = try LoStik(port: "/dev/cu.wchusbserial14230")
+            let loStik = try LoStik(port: port)
             let version = try loStik.system.version()
             print("Version: \(version)")
             let hardwareIdentifier = try loStik.system.hardwareIdentifier()

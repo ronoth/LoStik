@@ -36,6 +36,8 @@ public extension EEPROMAddress {
     public static var max: EEPROMAddress { return EEPROMAddress(0x3FF) }
 }
 
+// MARK: - CustomStringConvertible
+
 extension EEPROMAddress: CustomStringConvertible {
     
     public var description: String {

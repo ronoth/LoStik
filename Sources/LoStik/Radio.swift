@@ -52,12 +52,14 @@ public extension LoStik.Radio {
          */
         response = try device.read()
         
-        let prefix = "radio_rx "
+        let prefix = "radio_rx"
         
         guard response.rawValue.contains(prefix)
             else { throw LoStikError.errorCode(response) }
         
-        let hexadecimalString = response.rawValue.replacingOccurrences(of: prefix, with: "")
+        let hexadecimalString = response.rawValue
+            .replacingOccurrences(of: prefix, with: "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard let data = Data(hexadecimal: hexadecimalString)
             else { throw LoStikError.errorCode(response) }

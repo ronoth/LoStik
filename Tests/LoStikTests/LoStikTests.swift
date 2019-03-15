@@ -79,7 +79,7 @@ final class LoStikTests: XCTestCase {
             try loStik.system.setPin(.gpio11, state: .off)
             // stop LoRaWan
             let pauseDuration = try loStik.mac.pause()
-            print("Pausing LoRaWan for \(pauseDuration) miliseconds")
+            print("Pausing LoRaWAN for \(pauseDuration) miliseconds")
             // send data
             try loStik.radio.transmit(Data("test \(Date())".utf8))
         }

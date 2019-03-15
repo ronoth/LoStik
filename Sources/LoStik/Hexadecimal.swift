@@ -75,7 +75,7 @@ internal extension Data {
         
         let stringSize = 2
         for index in stride(from: 0, to: string.count, by: stringSize) {
-            let hexString = string[string.index(string.startIndex, offsetBy: index) ..< string.index(string.startIndex, offsetBy: Swift.min(index + 1, string.count))]
+            let hexString = string[string.index(string.startIndex, offsetBy: index) ..< string.index(string.startIndex, offsetBy: Swift.min(index + stringSize, string.count))]
             assert(hexString.count == 2)
             guard let hexValue = UInt8(hexString, radix: 16)
                 else { return nil } // not hex value

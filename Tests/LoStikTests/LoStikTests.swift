@@ -88,6 +88,8 @@ final class LoStikTests: XCTestCase {
             print("Pausing LoRaWAN for \(pauseDuration) miliseconds")
             // send data
             try loStik.radio.transmit(Data("test \(Date())".utf8))
+            let recievedData = try loStik.radio.recieve(windowSize: 100)
+            print("Recieved \(recievedData)")
         }
         catch { XCTFail("Error: \(error)") }
     }

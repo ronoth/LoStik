@@ -80,14 +80,27 @@ elif "RN2903" in verinfo:
 else:
     raise Exception("Invalid SKU")
 
-print(verinfo.strip())
-print("Configuring Channels:")
-# for ch_id in range(0, max_ch):
-    # ch_freq = get_var('mac get ch freq %d' % ch_id)
-    # ch_status = get_var('mac get ch status %d' % ch_id)
-    # ch_drrange = get_var('mac get ch drrange %d' % ch_id)
-
 config_channels = config.items('channels')
+auth_method = config.get('mac', 'auth')
+
+print(verinfo.strip())
+print('Auth Method: %s' % auth_method)
+
+if auth_method == 'otaa':
+    print('Configuring otaa')
+    set_confirm('mac set appeui %s' % config.get('otaa', 'appeui'))
+    set_confirm('mac set appkey %s' % config.get('otaa', 'appkey'))
+    set_confirm('mac set deveui %s' % config.get('otaa', 'deveui'))
+elif auth_method == 'abp':
+    print('Configuring apb')
+    set_confirm('mac set devaddr %s' % config.get('abp', 'devaddr'))
+    set_confirm('mac set nwkskey %s' % config.get('abp', 'nwkskey'))
+    set_confrim('mac set appskey %s' % config.get('abp', 'appskey'))
+else:
+    raise Exception('Invaoid auth method %s' % auth_method)
+
+
+print("Configuring Channels:")
 ch_count = len(config_channels)
 i = 0
 
@@ -133,3 +146,6 @@ for config_entry in config_channels:
     config_status = config_fields[1].replace('"', '').strip()
     set_confirm('mac set ch status %d %s' % (ch_id, config_status))
     update_progress()
+
+print("Saving mac settings")
+set_confirm('mac save')

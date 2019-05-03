@@ -94,7 +94,8 @@ class PrintLines(LineReader):
             print("Retrying OTAA connection")
             self.retry(self.join)
         elif data.strip() == "accepted":
-            self.status = ConnectionState.CONNECTED
+            print("UPDATING STATE to connected")
+            self.state = ConnectionState.CONNECTED
 
     def connection_lost(self, exc):
         """

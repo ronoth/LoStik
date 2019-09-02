@@ -1,6 +1,7 @@
 .DS_Store
 pip-selfcheck.json
 .Python
+*.pyc
 examples/bin
 examples/lib
 examples/include

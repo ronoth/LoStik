@@ -1,7 +1,7 @@
 # LoStik
 
 
-LoStik is an affordable, easy to use, LoRaWAN™ compatible device. It lets IoT (Internet of Things) integrators, network testers, and hobbyists get connected to a LoRa® network faster, diagnose network issues more easily, and build new and exciting connected devices.  LoStik is currently available to purchase on [Crowd Supply](https://www.crowdsupply.com/third-venture/lostik).
+LoStik is an affordable, easy to use, LoRaWAN™ compatible device. It lets IoT (Internet of Things) integrators, network testers, and hobbyists get connected to a LoRa® network faster, diagnose network issues more easily, and build new and exciting connected devices.  LoStik is currently available to purchase on [Crowd Supply](https://www.crowdsupply.com/third-venture/lostik) and [Connected Things Store](https://connectedthings.store/gb/search?controller=search&s=lostik).
 
 ## Examples
 
